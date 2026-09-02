@@ -1179,5 +1179,3 @@ grep -i "error" out/bambu_log.txt
 ---
 
 **จบหลักสูตร**
-
-> หากมีคำถามเพิ่มเติมหรือต้องการให้ทำ slide PPTX, สร้างเพิ่ม Lab เฉพาะทาง (เช่น HLS สำหรับ ML accelerator, RISC-V pipeline), หรือต้องการเวอร์ชัน PDF/PPTX — แจ้งได้เลยครับ
