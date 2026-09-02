@@ -94,7 +94,7 @@
 ```
 ┌──────────────┐     ┌──────────────┐     ┌──────────────┐     ┌──────────────┐
 │   C / C++    │     │  Frontend    │     │  High-level  │     │  Scheduler   │
-│  /SystemC    │ ──▶ │ (clang/gcc)  │ ──▶ │ Transforms   │ ──▶ │              │
+│  /SystemC    │ ──▶│ (clang/gcc)  │ ──▶ │ Transforms   │ ──▶│              │
 │  source code │     │  parse, type │     │ (opt, inline,│     │ (allocate    │
 │              │     │  check, CFG  │     │  unroll,etc) │     │  time slots) │
 └──────────────┘     └──────────────┘     └──────────────┘     └──────────────┘
@@ -102,7 +102,7 @@
                                                                        ▼
 ┌──────────────┐     ┌──────────────┐     ┌──────────────┐     ┌──────────────┐
 │  Verilog /   │     │  RTL         │     │  Binding     │     │  Resource    │
-│  VHDL output │ ◀── │  Generation  │ ◀── │ (mapping ops │ ◀── │  Allocation   │
+│  VHDL output │◀── │  Generation  │ ◀── │ (mapping ops │ ◀──│  Allocation   │
 │  (synth-ready│     │  (FSM, regs) │     │  to hardware)│     │ (ALU, MUL,   │
 │              │     │              │     │              │     │  RAM, port)  │
 └──────────────┘     └──────────────┘     └──────────────┘     └──────────────┘
