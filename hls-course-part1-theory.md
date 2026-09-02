@@ -110,7 +110,7 @@
 
 ### 2.2 Frontend (ส่วนหน้า)
 
-ใช้ compiler infrastructure (clang, gcc, 혹은 SystemC simulator) เพื่อ:
+ใช้ compiler infrastructure (clang, gcc, SystemC simulator) เพื่อ:
 
 - **Lexical/Syntax Analysis** — แยก token, parse เป็น AST
 - **Type Checking** — ตรวจสอบชนิดข้อมูล
