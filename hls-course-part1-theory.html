@@ -1,0 +1,868 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc 3.10.1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>Introduction to High-Level Synthesis — Part I: Theory</title>
+  <style>
+    /* Default styles provided by pandoc.
+    ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+    */
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: 1.5em;}
+    div.column{flex: auto;}
+    @media screen {
+    div.columns{gap: min(4vw, 1.5em);}
+    div.column{overflow-x: auto;}
+    }
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+    .display.math{display: block; text-align: center; margin: 0.5rem auto;}
+    /* CSS for syntax highlighting */
+    html { -webkit-text-size-adjust: 100%; }
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      {   }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+    code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+    code span.at { color: #7d9029; } /* Attribute */
+    code span.bn { color: #40a070; } /* BaseN */
+    code span.bu { color: #008000; } /* BuiltIn */
+    code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #4070a0; } /* Char */
+    code span.cn { color: #880000; } /* Constant */
+    code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+    code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+    code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+    code span.dt { color: #902000; } /* DataType */
+    code span.dv { color: #40a070; } /* DecVal */
+    code span.er { color: #ff0000; font-weight: bold; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #40a070; } /* Float */
+    code span.fu { color: #06287e; } /* Function */
+    code span.im { color: #008000; font-weight: bold; } /* Import */
+    code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+    code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+    code span.op { color: #666666; } /* Operator */
+    code span.ot { color: #007020; } /* Other */
+    code span.pp { color: #bc7a00; } /* Preprocessor */
+    code span.sc { color: #4070a0; } /* SpecialChar */
+    code span.ss { color: #bb6688; } /* SpecialString */
+    code span.st { color: #4070a0; } /* String */
+    code span.va { color: #19177c; } /* Variable */
+    code span.vs { color: #4070a0; } /* VerbatimString */
+    code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+  </style>
+  <link rel="stylesheet" href="print.css" />
+</head>
+<body>
+<header id="title-block-header">
+<h1 class="title">Introduction to High-Level Synthesis — Part I:
+Theory</h1>
+</header>
+<nav id="TOC" role="doc-toc">
+<ul>
+<li><a href="#introduction-to-high-level-synthesis"
+id="toc-introduction-to-high-level-synthesis">Introduction to High-Level
+Synthesis</a>
+<ul>
+<li><a href="#หลกสตรอบรมระดบเรมตนถงระดบกลาง-beginner-intermediate"
+id="toc-หลกสตรอบรมระดบเรมตนถงระดบกลาง-beginner-intermediate">หลักสูตรอบรมระดับเริ่มต้นถึงระดับกลาง
+(Beginner → Intermediate)</a></li>
+<li><a href="#สารบญ" id="toc-สารบญ">สารบัญ</a></li>
+</ul></li>
+<li><a href="#part-i-ภาคทฤษฎ-1" id="toc-part-i-ภาคทฤษฎ-1">Part I —
+ภาคทฤษฎี</a>
+<ul>
+<li><a href="#บทท-1-high-level-synthesis-คออะไร"
+id="toc-บทท-1-high-level-synthesis-คออะไร">บทที่ 1 — High-Level Synthesis
+คืออะไร?</a></li>
+<li><a href="#บทท-2-กระบวนการทำงานของ-hls"
+id="toc-บทท-2-กระบวนการทำงานของ-hls">บทที่ 2 — กระบวนการทำงานของ
+HLS</a></li>
+<li><a href="#บทท-3-กลไกภายในของ-hls"
+id="toc-บทท-3-กลไกภายในของ-hls">บทที่ 3 — กลไกภายในของ HLS</a></li>
+<li><a href="#บทท-4-ภาษาตนทางและ-coding-style"
+id="toc-บทท-4-ภาษาตนทางและ-coding-style">บทที่ 4 — ภาษาต้นทางและ Coding
+Style</a></li>
+<li><a href="#บทท-5-directives-pragmas-ทใชบอย"
+id="toc-บทท-5-directives-pragmas-ทใชบอย">บทที่ 5 — Directives / Pragmas
+ที่ใช้บ่อย</a></li>
+<li><a href="#บทท-6-interface-synthesis"
+id="toc-บทท-6-interface-synthesis">บทที่ 6 — Interface Synthesis</a></li>
+</ul></li>
+</ul>
+</nav>
+<h1 id="introduction-to-high-level-synthesis">Introduction to High-Level
+Synthesis</h1>
+<h2
+id="หลกสตรอบรมระดบเรมตนถงระดบกลาง-beginner-intermediate">หลักสูตรอบรมระดับเริ่มต้นถึงระดับกลาง
+(Beginner → Intermediate)</h2>
+<blockquote>
+<p><strong>กลุ่มเป้าหมาย:</strong> นักศึกษาวิศวกรรมชั้นปีที่ 3–4
+และวิศวกรจบใหม่ที่มีพื้นฐาน RTL (Verilog/SystemVerilog) และเคยใช้งาน Open-source
+EDA (Yosys / OpenROAD / Icarus / COCOTB)</p>
+<p><strong>ระยะเวลา:</strong> 3 วัน (ทฤษฎี 1 วัน + ปฏิบัติ 2 วัน) —
+ปรับได้ตามความเหมาะสม</p>
+<p><strong>เครื่องมือหลัก:</strong> Bambu HLS (open-source), Yosys,
+OpenROAD, Icarus Verilog, COCOTB</p>
+<p><strong>PDK อ้างอิง:</strong> IHP SG13G2 (130 nm SiGe BiCMOS) และ
+SKY130</p>
+</blockquote>
+<hr />
+<h2 id="สารบญ">สารบัญ</h2>
+<h3 id="part-i-ภาคทฤษฎ">Part I — ภาคทฤษฎี</h3>
+<ol type="1">
+<li><a href="#บทที่-1--high-level-synthesis-คืออะไร">บทที่ 1 — High-Level
+Synthesis คืออะไร?</a></li>
+<li><a href="#บทที่-2--กระบวนการทำงานของ-hls">บทที่ 2 — กระบวนการทำงานของ
+HLS</a></li>
+<li><a href="#บทที่-3--กลไกภายในของ-hls">บทที่ 3 — กลไกภายในของ HLS:
+Scheduling, Binding, Allocation</a></li>
+<li><a href="#บทที่-4--ภาษาต้นทางและ-coding-style">บทที่ 4 — ภาษาต้นทางและ
+Coding Style</a></li>
+<li><a href="#บทที่-5--directives--pragmas-ที่ใช้บ่อย">บทที่ 5 — Directives /
+Pragmas ที่ใช้บ่อย</a></li>
+<li><a href="#บทที่-6--interface-synthesis">บทที่ 6 — Interface
+Synthesis</a></li>
+</ol>
+<h3 id="part-ii-ภาคปฏบต-อยในไฟล-hls-course-part2-practice.md">Part II —
+ภาคปฏิบัติ (อยู่ในไฟล์ <code>hls-course-part2-practice.md</code>)</h3>
+<ol start="7" type="1">
+<li>การติดตั้ง Bambu HLS</li>
+<li>Lab 1 — Simple Adder</li>
+<li>Lab 2 — FIR Filter with Pipelining</li>
+<li>Lab 3 — Matrix Multiplication</li>
+<li>Lab 4 — Dataflow Streaming</li>
+<li>การตรวจสอบ (Verification)</li>
+<li>การนำไปใช้กับ OpenROAD (IHP SG13G2 / SKY130)</li>
+</ol>
+<hr />
+<h1 id="part-i-ภาคทฤษฎ-1">Part I — ภาคทฤษฎี</h1>
+<h2 id="บทท-1-high-level-synthesis-คออะไร">บทที่ 1 — High-Level Synthesis
+คืออะไร?</h2>
+<h3 id="นยาม">1.1 นิยาม</h3>
+<p><strong>High-Level Synthesis (HLS)</strong> คือ
+กระบวนการแปลงภาษาระดับสูง (C / C++ / SystemC / MATLAB) ไปเป็น
+Register-Transfer Level (RTL) ที่อธิบายด้วย HDL (Verilog / VHDL) โดยอัตโนมัติ
+ซึ่งต่างจากการเขียน RTL ด้วยมือ (manual RTL design) ที่นักออกแบบต้องระบุทุก clock
+cycle, ทุก state, ทุก register ด้วยตนเอง</p>
+<blockquote>
+<p><strong>สรุปสั้น ๆ:</strong> <em>HLS = “อธิบายว่าทำอะไร (What) →
+ให้เครื่องมือคิดว่าทำอย่างไร (How)”</em></p>
+</blockquote>
+<h3 id="เปรยบเทยบ-rtl-แบบดงเดม-vs-hls">1.2 เปรียบเทียบ: RTL แบบดั้งเดิม vs
+HLS</h3>
+<table>
+<colgroup>
+<col style="width: 12%" />
+<col style="width: 41%" />
+<col style="width: 45%" />
+</colgroup>
+<thead>
+<tr>
+<th>มิติ</th>
+<th>RTL Design (Manual)</th>
+<th>High-Level Synthesis</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>ภาษา</strong></td>
+<td>Verilog / VHDL / SystemVerilog</td>
+<td>C / C++ / SystemC</td>
+</tr>
+<tr>
+<td><strong>ระดับนามธรรม</strong></td>
+<td>Cycle-accurate</td>
+<td>Algorithmic / behavioral</td>
+</tr>
+<tr>
+<td><strong>ความเร็วในการออกแบบ</strong></td>
+<td>ช้า (วัน–สัปดาห์ต่อบล็อก)</td>
+<td>เร็ว (ชั่วโมง)</td>
+</tr>
+<tr>
+<td><strong>ควบคุม micro-architecture</strong></td>
+<td>เต็มที่</td>
+<td>ผ่าน directives/pragmas</td>
+</tr>
+<tr>
+<td><strong>ความยากของ design space exploration</strong></td>
+<td>ต้องเขียน RTL หลายเวอร์ชัน</td>
+<td>เปลี่ยน directive แล้วรันใหม่</td>
+</tr>
+<tr>
+<td><strong>ผลลัพธ์เชิงคุณภาพ (QoR)</strong></td>
+<td>ขึ้นกับความเชี่ยวชาญ</td>
+<td>ดีใกล้เคียงกันเมื่อปรับ directive เหมาะสม</td>
+</tr>
+<tr>
+<td><strong>การ verify</strong></td>
+<td>ต้องเขียน testbench HDL</td>
+<td>ใช้ C testbench เดิมได้เลย (C/RTL co-sim)</td>
+</tr>
+</tbody>
+</table>
+<h3 id="ประวตศาสตร-ยอ">1.3 ประวัติศาสตร์ (ย่อ)</h3>
+<ul>
+<li><strong>1980s</strong> — งานวิจัย HLS เริ่มต้น (Synopsys Behavioral
+Compiler, Intel/Synopsys/Academic prototypes)</li>
+<li><strong>1990s</strong> — การใช้งานจริงในอุตสาหกรรม DSP</li>
+<li><strong>2000s</strong> — SystemC กลายเป็นมาตรฐาน IEEE 1666</li>
+<li><strong>2010s</strong> — Xilinx Vivado HLS / Vitis HLS ทำให้ HLS เป็น
+mainstream สำหรับ FPGA</li>
+<li><strong>2020s</strong> — Open-source HLS (Bambu, Dynamatic) +
+การผสานกับ OpenROAD ทำให้ ASIC design เข้าถึงได้</li>
+</ul>
+<h3 id="เครองมอ-hls-ทใชในอตสาหกรรมและงานวจย">1.4 เครื่องมือ HLS
+ที่ใช้ในอุตสาหกรรมและงานวิจัย</h3>
+<table>
+<colgroup>
+<col style="width: 31%" />
+<col style="width: 26%" />
+<col style="width: 23%" />
+<col style="width: 18%" />
+</colgroup>
+<thead>
+<tr>
+<th>เครื่องมือ</th>
+<th>ผู้พัฒนา</th>
+<th>License</th>
+<th>ใช้กับ</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Vitis HLS</strong></td>
+<td>AMD/Xilinx</td>
+<td>Commercial (free Webpack)</td>
+<td>FPGA</td>
+</tr>
+<tr>
+<td><strong>Intel HLS Compiler</strong></td>
+<td>Intel</td>
+<td>Commercial (free edition)</td>
+<td>FPGA</td>
+</tr>
+<tr>
+<td><strong>Catapult HLS</strong></td>
+<td>Siemens EDA (Mentor)</td>
+<td>Commercial</td>
+<td>ASIC / FPGA</td>
+</tr>
+<tr>
+<td><strong>Stratus HLS</strong></td>
+<td>Cadence</td>
+<td>Commercial</td>
+<td>ASIC / FPGA</td>
+</tr>
+<tr>
+<td><strong>Bambu</strong></td>
+<td>Politecnico di Milano</td>
+<td><strong>Open-source (GPL)</strong></td>
+<td>ASIC / FPGA / OpenROAD</td>
+</tr>
+<tr>
+<td><strong>Dynamatic</strong></td>
+<td>EPFL</td>
+<td>Open-source (Apache 2.0)</td>
+<td>ASIC (research)</td>
+</tr>
+<tr>
+<td><strong>LegUp</strong></td>
+<td>Univ. of Toronto</td>
+<td>Open-source (legacy)</td>
+<td>FPGA (research)</td>
+</tr>
+<tr>
+<td><strong>HLS4ML</strong></td>
+<td>CERN/CMU</td>
+<td>Open-source (BSD)</td>
+<td>ML on FPGA</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p><strong>สำหรับหลักสูตรนี้</strong> เราจะใช้ <strong>Bambu HLS</strong>
+เนื่องจากเป็น open-source และเชื่อมต่อกับ Yosys + OpenROAD ได้โดยตรง (เหมาะกับ
+PDK IHP SG13G2 / SKY130) แต่จะอธิบายแนวคิดในเชิง tool-agnostic
+เพื่อให้นำไปใช้กับเครื่องมือ commercial ได้ด้วย</p>
+</blockquote>
+<h3 id="ทำไมตองเรยน-hls">1.5 ทำไมต้องเรียน HLS?</h3>
+<ol type="1">
+<li><strong>Productivity</strong> — เขียนน้อยลง 10× เมื่อเทียบกับ manual
+RTL</li>
+<li><strong>Design Space Exploration (DSE)</strong> — ลองหลาย
+micro-architecture ได้เร็ว</li>
+<li><strong>Reuse</strong> — testbench เดียวกัน verify ทั้ง C model และ
+RTL</li>
+<li><strong>Algorithm Focus</strong> — วิศวกรมุ่งเน้น “ทำอะไร” ไม่ใช่
+“ทำอย่างไร”</li>
+<li><strong>Open-source Ecosystem</strong> — สอดคล้องกับ flow Yosys +
+OpenROAD ที่ใช้อยู่แล้ว</li>
+</ol>
+<hr />
+<h2 id="บทท-2-กระบวนการทำงานของ-hls">บทที่ 2 — กระบวนการทำงานของ HLS</h2>
+<h3 id="flow-ภาพรวม">2.1 Flow ภาพรวม</h3>
+<pre><code>┌──────────────┐     ┌──────────────┐     ┌──────────────┐     ┌──────────────┐
+│   C / C++    │     │  Frontend    │     │  High-level  │     │  Scheduler   │
+│  /SystemC    │ ──▶ │ (clang/gcc)  │ ──▶ │ Transforms   │ ──▶ │              │
+│  source code │     │  parse, type │     │ (opt, inline,│     │ (allocate    │
+│              │     │  check, CFG  │     │  unroll,etc) │     │  time slots) │
+└──────────────┘     └──────────────┘     └──────────────┘     └──────────────┘
+                                                                       │
+                                                                       ▼
+┌──────────────┐     ┌──────────────┐     ┌──────────────┐     ┌──────────────┐
+│  Verilog /   │     │  RTL         │     │  Binding     │     │  Resource    │
+│  VHDL output │ ◀── │  Generation  │ ◀── │ (mapping ops │ ◀── │  Allocation   │
+│  (synth-ready│     │  (FSM, regs) │     │  to hardware)│     │ (ALU, MUL,   │
+│              │     │              │     │              │     │  RAM, port)  │
+└──────────────┘     └──────────────┘     └──────────────┘     └──────────────┘</code></pre>
+<h3 id="frontend-สวนหนา">2.2 Frontend (ส่วนหน้า)</h3>
+<p>ใช้ compiler infrastructure (clang, gcc, 혹은 SystemC simulator)
+เพื่อ:</p>
+<ul>
+<li><strong>Lexical/Syntax Analysis</strong> — แยก token, parse เป็น
+AST</li>
+<li><strong>Type Checking</strong> — ตรวจสอบชนิดข้อมูล</li>
+<li><strong>Control Flow Graph (CFG)</strong> — แทน execution path
+ของโปรแกรม</li>
+<li><strong>Data Flow Analysis</strong> — ติดตามการใช้ตัวแปร (def-use
+chain)</li>
+</ul>
+<p>ผลลัพธ์: <strong>Intermediate Representation (IR)</strong> เช่น LLVM IR
+หรือ IR เฉพาะของเครื่องมือ</p>
+<h3 id="high-level-transformations">2.3 High-Level Transformations</h3>
+<p>ก่อน scheduling เครื่องมืออาจทำ optimization:</p>
+<ul>
+<li><strong>Function Inlining</strong> — แทน call ด้วย body เพื่อให้
+scheduler เห็นภาพรวม</li>
+<li><strong>Loop Transformations</strong> — unroll, fusion, fission,
+interchange, tiling</li>
+<li><strong>Dead Code Elimination</strong> — ลบโค้ดที่ไม่ได้ใช้</li>
+<li><strong>Constant Propagation</strong> — แทนค่าคงที่ตอนคอมไพล์</li>
+</ul>
+<h3 id="scheduling-จดสรร-เวลา">2.4 Scheduling — จัดสรร “เวลา”</h3>
+<p><strong>Scheduling</strong> ตัดสินใจว่าแต่ละ operation จะทำงานใน
+<strong>clock cycle ใด</strong> โดย:</p>
+<ul>
+<li>เคารพ <strong>data dependencies</strong> (ไม่ให้ใช้ค่าก่อนผลิต)</li>
+<li>เคารพ <strong>resource constraints</strong> (ไม่เกินจำนวน functional
+unit ที่มี)</li>
+<li>พยายามบรรลุ <strong>target latency / throughput</strong></li>
+</ul>
+<p>อัลกอริทึมที่นิยม: - <strong>ASAP</strong> (As Soon As Possible) -
+<strong>ALAP</strong> (As Late As Possible) - <strong>List
+Scheduling</strong> (priority-based, เร็วและนิยมที่สุด) -
+<strong>Force-Directed Scheduling</strong></p>
+<h3 id="allocation-binding-จดสรร-ทรพยากร">2.5 Allocation &amp; Binding —
+จัดสรร “ทรัพยากร”</h3>
+<ul>
+<li><strong>Allocation</strong> — เลือกว่าจะมี functional unit อะไรบ้าง เช่น
+2× adder, 1× multiplier</li>
+<li><strong>Binding</strong> — map operation แต่ละตัวไปยัง functional unit
+ตัวใด</li>
+<li><strong>Register Allocation</strong> — เลือกว่าตัวแปรใดอยู่ใน register
+ตัวใด รวมถึง register sharing</li>
+</ul>
+<h3 id="rtl-generation">2.6 RTL Generation</h3>
+<p>สร้างไฟล์ Verilog/VHDL:</p>
+<ul>
+<li><strong>FSM</strong> จาก CFG (state register, next-state logic)</li>
+<li><strong>Datapath</strong> (functional units, muxes, wires)</li>
+<li><strong>Control Unit</strong> (FSM + interface protocol)</li>
+<li><strong>Memory</strong> (registers, BRAM inference, FIFO)</li>
+<li><strong>Interface</strong> (ap_start, ap_done, AXI, FIFO, RAM
+ports)</li>
+</ul>
+<h3 id="verification-flow-สำคญมาก">2.7 Verification Flow (สำคัญมาก)</h3>
+<p>HLS มี <strong>co-simulation</strong> เป็นจุดแข็ง:</p>
+<pre><code>C Testbench
+    │
+    ▼
+C Model (algorithmic) ── self-checking ── PASS
+    │
+    ▼
+C/RTL Co-simulation
+    │
+    ▼
+RTL (Verilog via Icarus/Verilator) ── self-checking ── PASS</code></pre>
+<p>ข้อดี: ใช้ testbench ตัวเดียว ไม่ต้องเขียน HDL testbench ใหม่</p>
+<hr />
+<h2 id="บทท-3-กลไกภายในของ-hls">บทที่ 3 — กลไกภายในของ HLS</h2>
+<h3 id="control-data-flow-graph-cdfg">3.1 Control-Data Flow Graph
+(CDFG)</h3>
+<p>HLS แทนโปรแกรมด้วย <strong>CDFG</strong>: - <strong>Control
+Flow</strong> — basic blocks + branches - <strong>Data Flow</strong> —
+operations + data dependencies</p>
+<pre><code>   a ──┐
+       ├──[+]── c ──┐
+   b ──┘            ├──[*]── e
+        c&#39; ─────────┘
+                    │
+   d ───────────────┘</code></pre>
+<h3 id="ตวอยาง-scheduling-แบบงาย">3.2 ตัวอย่าง: Scheduling แบบง่าย</h3>
+<p>โค้ด:</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>c <span class="op">=</span> a <span class="op">+</span> b<span class="op">;</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>e <span class="op">=</span> c <span class="op">*</span> d<span class="op">;</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>f <span class="op">=</span> e <span class="op">+</span> <span class="dv">1</span><span class="op">;</span></span></code></pre></div>
+<p>สมมติ adder ใช้ 1 cycle, multiplier ใช้ 2 cycles:</p>
+<table>
+<thead>
+<tr>
+<th>Cycle</th>
+<th>0</th>
+<th>1</th>
+<th>2</th>
+<th>3</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Op1 <code>+</code></td>
+<td>✓</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>Op2 <code>*</code></td>
+<td></td>
+<td>✓</td>
+<td>✓</td>
+<td></td>
+</tr>
+<tr>
+<td>Op3 <code>+</code></td>
+<td></td>
+<td></td>
+<td></td>
+<td>✓</td>
+</tr>
+</tbody>
+</table>
+<p><strong>ผลลัพธ์:</strong> Latency = 4 cycles, 1 adder, 1 multiplier</p>
+<p>ถ้าเราเพิ่ม multiplier อีก 1 ตัว (resource constraint เปลี่ยน) → schedule
+จะสั้นลงได้</p>
+<h3 id="resource-allocation-binding">3.3 Resource Allocation &amp;
+Binding</h3>
+<p>ตัวอย่างการ binding:</p>
+<pre><code>Op1: a + b   → adder_0
+Op3: e + 1   → adder_0   (register share กับ Op1)
+Op2: c * d   → mult_0</code></pre>
+<p><strong>Cost tradeoffs:</strong> - <strong>Sharing functional
+unit</strong> → ใช้พื้นที่น้อย แต่ latency เพิ่ม - <strong>ไม่ share</strong> →
+เร็วขึ้น แต่พื้นที่เพิ่ม</p>
+<h3 id="register-allocation">3.4 Register Allocation</h3>
+<p>ตัวแปรที่ “มีชีวิต” (live) พร้อมกันต้องอยู่คนละ register:</p>
+<pre><code>int a, b, c, d, e;
+c = a + b;     // a,b,c live
+e = c + d;     // a,b dead; c,d,e live</code></pre>
+<p><strong>Solution:</strong> graph coloring algorithm (เช่น Chaitin’s
+algorithm)</p>
+<h3 id="memory-architecture">3.5 Memory Architecture</h3>
+<p>HLS ต้องตัดสินใจว่า array จะเก็บที่ไหน: - <strong>Register</strong> — เร็วสุด
+แต่ใช้ FF จำนวนมาก - <strong>Distributed RAM (LUTRAM)</strong> — เร็ว,
+จำกัดขนาด - <strong>Block RAM (BRAM)</strong> — ใหญ่, 1–2 cycle latency -
+<strong>External memory</strong> — ช้า, ใช้ bus protocol</p>
+<p>ตัวเลือกนี้ถูกควบคุมด้วย <strong>directive</strong> (ดูบทที่ 5)</p>
+<hr />
+<h2 id="บทท-4-ภาษาตนทางและ-coding-style">บทที่ 4 — ภาษาต้นทางและ Coding
+Style</h2>
+<h3 id="ภาษาทรองรบ">4.1 ภาษาที่รองรับ</h3>
+<table>
+<thead>
+<tr>
+<th>ภาษา</th>
+<th>Bambu</th>
+<th>Vitis HLS</th>
+<th>Catapult</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>C</td>
+<td>✓</td>
+<td>✓</td>
+<td>✓</td>
+</tr>
+<tr>
+<td>C++</td>
+<td>✓</td>
+<td>✓</td>
+<td>✓</td>
+</tr>
+<tr>
+<td>SystemC</td>
+<td>✓ (จำกัด)</td>
+<td>ผ่าน wrapper</td>
+<td>✓</td>
+</tr>
+<tr>
+<td>OpenCL</td>
+<td>—</td>
+<td>✓</td>
+<td>✓</td>
+</tr>
+<tr>
+<td>MATLAB/Simulink</td>
+<td>—</td>
+<td>ผ่าน HDL Coder</td>
+<td>✓</td>
+</tr>
+</tbody>
+</table>
+<h3 id="arbitrary-precision-data-types">4.2 Arbitrary Precision Data
+Types</h3>
+<p>ภาษา C ใช้ int (32-bit), double (64-bit) ซึ่งไม่ตรงกับ hardware จริงเสมอ
+HLS จึงมี type พิเศษ:</p>
+<p><strong>Xilinx (Vitis HLS):</strong></p>
+<div class="sourceCode" id="cb7"><pre
+class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="pp">#include </span><span class="im">&quot;ap_int.h&quot;</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>ap_int<span class="op">&lt;</span><span class="dv">8</span><span class="op">&gt;</span>  x<span class="op">;</span>     <span class="co">// signed 8-bit</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>ap_uint<span class="op">&lt;</span><span class="dv">16</span><span class="op">&gt;</span> y<span class="op">;</span>    <span class="co">// unsigned 16-bit</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>ap_fixed<span class="op">&lt;</span><span class="dv">16</span><span class="op">,</span><span class="dv">8</span><span class="op">&gt;</span> fx<span class="op">;</span> <span class="co">// Q8.8 fixed-point</span></span></code></pre></div>
+<p><strong>Bambu (ac_types — Mentor/Siemens):</strong></p>
+<div class="sourceCode" id="cb8"><pre
+class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="pp">#include </span><span class="im">&quot;ac_int.h&quot;</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>ac_int<span class="op">&lt;</span><span class="dv">8</span><span class="op">,</span><span class="kw">false</span><span class="op">&gt;</span> x<span class="op">;</span>   <span class="co">// unsigned 8-bit</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>ac_int<span class="op">&lt;</span><span class="dv">8</span><span class="op">,</span><span class="kw">true</span><span class="op">&gt;</span>  y<span class="op">;</span>   <span class="co">// signed 8-bit</span></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>ac_fixed<span class="op">&lt;</span><span class="dv">16</span><span class="op">,</span><span class="dv">8</span><span class="op">,</span><span class="kw">true</span><span class="op">,</span>AC_RND<span class="op">,</span>AC_SAT<span class="op">&gt;</span> fx<span class="op">;</span> <span class="co">// fixed-point</span></span></code></pre></div>
+<blockquote>
+<p><strong>เคล็ดลับ:</strong> ใช้ type เล็กที่สุดเท่าที่จำเป็น → ลด area, เร็วขึ้น</p>
+</blockquote>
+<h3 id="hlsstream-fifo-channel">4.3 hls::stream (FIFO Channel)</h3>
+<p>สำหรับ streaming interface:</p>
+<div class="sourceCode" id="cb9"><pre
+class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="pp">#include </span><span class="im">&quot;hls_stream.h&quot;</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> producer<span class="op">(</span>hls<span class="op">::</span>stream<span class="op">&lt;</span><span class="dt">int</span><span class="op">&gt;&amp;</span> out<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>    out<span class="op">.</span>write<span class="op">(</span><span class="dv">42</span><span class="op">);</span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> consumer<span class="op">(</span>hls<span class="op">::</span>stream<span class="op">&lt;</span><span class="dt">int</span><span class="op">&gt;&amp;</span> in<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>    <span class="dt">int</span> x <span class="op">=</span> in<span class="op">.</span>read<span class="op">();</span></span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<h3 id="coding-style-สำหรบ-hls">4.4 Coding Style สำหรับ HLS</h3>
+<p><strong>หลักการสำคัญ:</strong></p>
+<ol type="1">
+<li><strong>หลีกเลี่ยง dynamic memory</strong> (malloc, free, new) — HLS
+ต้องการ static memory</li>
+<li><strong>หลีกเลี่ยง recursion</strong> — HLS ไม่ synthesize ได้
+(Bambu/Vitis จะ error)</li>
+<li><strong>หลีกเลี่ยง system calls</strong> (printf, scanf) — ใช้เฉพาะใน
+testbench</li>
+<li><strong>ใช้ const</strong> — ช่วยให้ constant propagation ทำงาน</li>
+<li><strong>Loop bounds ต้องรู้ตอน compile-time</strong> (อย่างน้อยสำหรับ
+unroll)</li>
+<li><strong>หลีกเลี่ยง pointer arithmetic ที่ซับซ้อน</strong> — HLS
+วิเคราะห์ไม่ได้</li>
+</ol>
+<p><strong>ตัวอย่าง: Bad vs Good</strong></p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co">// ❌ Bad: dynamic bound</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> <span class="op">(</span><span class="dt">int</span> i <span class="op">=</span> <span class="dv">0</span><span class="op">;</span> i <span class="op">&lt;</span> n<span class="op">;</span> i<span class="op">++)</span> <span class="op">{</span> <span class="op">...</span> <span class="op">}</span>   <span class="co">// n มาจาก input → ต้องระบุ max</span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a><span class="co">// ✅ Good: known bound (หรือใช้ #pragma)</span></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> <span class="op">(</span><span class="dt">int</span> i <span class="op">=</span> <span class="dv">0</span><span class="op">;</span> i <span class="op">&lt;</span> <span class="dv">16</span><span class="op">;</span> i<span class="op">++)</span> <span class="op">{</span> <span class="op">...</span> <span class="op">}</span></span></code></pre></div>
+<div class="sourceCode" id="cb11"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co">// ❌ Bad: dynamic memory</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> <span class="op">*</span>buf <span class="op">=</span> malloc<span class="op">(</span>N <span class="op">*</span> <span class="kw">sizeof</span><span class="op">(</span><span class="dt">int</span><span class="op">));</span></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a><span class="co">// ✅ Good: static array</span></span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> buf<span class="op">[</span><span class="dv">1024</span><span class="op">];</span></span></code></pre></div>
+<div class="sourceCode" id="cb12"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co">// ❌ Bad: pointer alias</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> foo<span class="op">(</span><span class="dt">int</span> <span class="op">*</span>a<span class="op">,</span> <span class="dt">int</span> <span class="op">*</span>b<span class="op">)</span> <span class="op">{</span> <span class="op">*</span>a <span class="op">=</span> <span class="op">*</span>b <span class="op">+</span> <span class="dv">1</span><span class="op">;</span> <span class="op">}</span></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="co">// HLS อาจ assume a และ b ชี้ที่เดียวกัน (alias) → schedule ไม่กล้า parallel</span></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a><span class="co">// ✅ Good: ใช้ restrict</span></span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> foo<span class="op">(</span><span class="dt">int</span> <span class="op">*</span> <span class="dt">restrict</span> a<span class="op">,</span> <span class="dt">int</span> <span class="op">*</span> <span class="dt">restrict</span> b<span class="op">)</span> <span class="op">{</span> <span class="op">*</span>a <span class="op">=</span> <span class="op">*</span>b <span class="op">+</span> <span class="dv">1</span><span class="op">;</span> <span class="op">}</span></span></code></pre></div>
+<h3 id="function-hierarchy-top-function">4.5 Function Hierarchy &amp;
+Top Function</h3>
+<p>HLS เลือก <strong>top function</strong> เป็นจุดเริ่มต้น synthesis:</p>
+<div class="sourceCode" id="cb13"><pre
+class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co">// top function — argument จะกลายเป็น port</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> dut<span class="op">(</span><span class="dt">int</span> a<span class="op">,</span> <span class="dt">int</span> b<span class="op">,</span> <span class="dt">int</span><span class="op">&amp;</span> c<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a><span class="pp">#pragma HLS PIPELINE</span></span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>    c <span class="op">=</span> a <span class="op">+</span> b<span class="op">;</span></span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> main<span class="op">()</span> <span class="op">{</span>   <span class="co">// ไม่ synthesize</span></span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>    <span class="dt">int</span> a<span class="op">=</span><span class="dv">1</span><span class="op">,</span> b<span class="op">=</span><span class="dv">2</span><span class="op">,</span> c<span class="op">;</span></span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a>    dut<span class="op">(</span>a<span class="op">,</span> b<span class="op">,</span> c<span class="op">);</span></span>
+<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> <span class="op">(</span>c <span class="op">==</span> <span class="dv">3</span><span class="op">)</span> <span class="op">?</span> <span class="dv">0</span> <span class="op">:</span> <span class="dv">1</span><span class="op">;</span></span>
+<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<blockquote>
+<p><strong>Vitis HLS</strong> ใช้ <code>#pragma HLS INTERFACE</code> ระบุ
+port protocol <strong>Bambu</strong> ใช้ <code>--top-function</code> flag
+บน command line</p>
+</blockquote>
+<hr />
+<h2 id="บทท-5-directives-pragmas-ทใชบอย">บทที่ 5 — Directives / Pragmas
+ที่ใช้บ่อย</h2>
+<blockquote>
+<p>คำสั่งเหล่านี้บอก HLS ว่า “อยากให้ micro-architecture เป็นอย่างไร” ใน Vitis
+HLS ใช้ <code>#pragma HLS ...</code> ใน Bambu ใช้
+<code>#pragma HLS ...</code> เช่นกัน หรือระบุผ่าน flag
+<code>--pragma=...</code></p>
+</blockquote>
+<h3 id="pipeline">5.1 PIPELINE</h3>
+<p><strong>วัตถุประสงค์:</strong> เร่ง throughput — ทำให้ loop ใหม่เริ่มได้ทุก ๆ N
+cycles (II = Initiation Interval)</p>
+<div class="sourceCode" id="cb14"><pre
+class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> foo<span class="op">(</span><span class="dt">int</span> a<span class="op">[</span><span class="dv">16</span><span class="op">],</span> <span class="dt">int</span> b<span class="op">[</span><span class="dv">16</span><span class="op">],</span> <span class="dt">int</span> c<span class="op">[</span><span class="dv">16</span><span class="op">])</span> <span class="op">{</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="pp">#pragma HLS PIPELINE II=1</span></span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> <span class="op">(</span><span class="dt">int</span> i <span class="op">=</span> <span class="dv">0</span><span class="op">;</span> i <span class="op">&lt;</span> <span class="dv">16</span><span class="op">;</span> i<span class="op">++)</span> <span class="op">{</span></span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>        c<span class="op">[</span>i<span class="op">]</span> <span class="op">=</span> a<span class="op">[</span>i<span class="op">]</span> <span class="op">+</span> b<span class="op">[</span>i<span class="op">];</span></span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<p><strong>ผลลัพธ์:</strong> - ก่อน PIPELINE: 16 iterations × (latency) =
+~16+ cycles - หลัง PIPELINE II=1: 1 iteration / clock → 16 cycles +
+pipeline fill/drain</p>
+<p><strong>ค่า II:</strong> - II=1 คือเป้าหมายสูงสุด (เร็วสุด) - ถ้า II
+ต่ำกว่าที่เป็นไปได้ HLS จะบอก warning</p>
+<h3 id="unroll">5.2 UNROLL</h3>
+<p><strong>วัตถุประสงค์:</strong> สร้าง hardware ซ้ำหลายชุดเพื่อทำงานขนาน</p>
+<div class="sourceCode" id="cb15"><pre
+class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="pp">#pragma HLS UNROLL factor=4</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> <span class="op">(</span><span class="dt">int</span> i <span class="op">=</span> <span class="dv">0</span><span class="op">;</span> i <span class="op">&lt;</span> <span class="dv">16</span><span class="op">;</span> i<span class="op">++)</span> <span class="op">{</span></span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>    c<span class="op">[</span>i<span class="op">]</span> <span class="op">=</span> a<span class="op">[</span>i<span class="op">]</span> <span class="op">*</span> b<span class="op">[</span>i<span class="op">];</span></span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<ul>
+<li><code>UNROLL</code> (ไม่มี factor) = unroll เต็ม</li>
+<li><code>UNROLL factor=4</code> = unroll 4 ครั้ง (4× parallel units)</li>
+<li><strong>Cost:</strong> พื้นที่เพิ่ม, <strong>Benefit:</strong> throughput
+เพิ่ม</li>
+</ul>
+<h3 id="array_partition">5.3 ARRAY_PARTITION</h3>
+<p><strong>วัตถุประสงค์:</strong> แบ่ง array เพื่อให้เข้าถึงหลาย element
+พร้อมกันได้</p>
+<div class="sourceCode" id="cb16"><pre
+class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> buf<span class="op">[</span><span class="dv">16</span><span class="op">];</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="pp">#pragma HLS ARRAY_PARTITION variable=buf complete</span></span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a><span class="co">// ตอนนี้ buf[0]..buf[15] อยู่คนละ register/RAM → เข้าถึงพร้อมกันได้</span></span></code></pre></div>
+<p><strong>Modes:</strong> - <code>complete</code> — แยกทุก element -
+<code>block factor=N</code> — แบ่งเป็น block ละ N -
+<code>cyclic factor=N</code> — สลับแบบ round-robin</p>
+<h3 id="dataflow">5.4 DATAFLOW</h3>
+<p><strong>วัตถุประสงค์:</strong> ทำให้ function หลาย ๆ ตัวทำงานพร้อมกัน
+(task-level parallelism)</p>
+<div class="sourceCode" id="cb17"><pre
+class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> kernel<span class="op">(</span><span class="dt">in_t</span> a<span class="op">,</span> <span class="dt">in_t</span> b<span class="op">,</span> <span class="dt">out_t</span><span class="op">&amp;</span> c<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="pp">#pragma HLS DATAFLOW</span></span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>    stage1<span class="op">(</span>a<span class="op">,</span> b<span class="op">,</span> t1<span class="op">);</span></span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>    stage2<span class="op">(</span>t1<span class="op">,</span> t2<span class="op">);</span></span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>    stage3<span class="op">(</span>t2<span class="op">,</span> c<span class="op">);</span></span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<p><strong>ผลลัพธ์:</strong> pipeline ระหว่าง function ใช้ hls::stream
+เชื่อมต่อ</p>
+<h3 id="inline">5.5 INLINE</h3>
+<p><strong>วัตถุประสงค์:</strong> เอา body ของ function มาแทนที่ call
+site</p>
+<div class="sourceCode" id="cb18"><pre
+class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="pp">#pragma HLS INLINE</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> square<span class="op">(</span><span class="dt">int</span> x<span class="op">)</span> <span class="op">{</span> <span class="cf">return</span> x<span class="op">*</span>x<span class="op">;</span> <span class="op">}</span></span></code></pre></div>
+<p><strong>เมื่อไหร่ใช้:</strong> เมื่อ function เล็กและต้องการ share resource
+กับ caller</p>
+<h3 id="loop_flatten-loop_merge">5.6 LOOP_FLATTEN / LOOP_MERGE</h3>
+<div class="sourceCode" id="cb19"><pre
+class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="pp">#pragma HLS LOOP_FLATTEN</span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> <span class="op">(</span><span class="dt">int</span> i <span class="op">=</span> <span class="dv">0</span><span class="op">;</span> i <span class="op">&lt;</span> <span class="dv">4</span><span class="op">;</span> i<span class="op">++)</span></span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> <span class="op">(</span><span class="dt">int</span> j <span class="op">=</span> <span class="dv">0</span><span class="op">;</span> j <span class="op">&lt;</span> <span class="dv">4</span><span class="op">;</span> j<span class="op">++)</span></span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>    <span class="op">...</span> <span class="op">;</span></span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a><span class="co">// → กลายเป็น loop เดียว 16 iterations</span></span></code></pre></div>
+<p><strong>Benefit:</strong> เพิ่ม optimization opportunity</p>
+<h3 id="dependence">5.7 DEPENDENCE</h3>
+<p>บอก HLS ว่าไม่มี dependency (เมื่อ HLS อนุมานว่ามี):</p>
+<div class="sourceCode" id="cb20"><pre
+class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="pp">#pragma HLS DEPENDENCE variable=a inter false</span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a><span class="co">// ไม่มี dependency ระหว่าง iteration ของ array a</span></span></code></pre></div>
+<h3 id="สรป-directives">5.8 สรุป Directives</h3>
+<table>
+<thead>
+<tr>
+<th>Directive</th>
+<th>ผลต่อ Area</th>
+<th>ผลต่อ Latency</th>
+<th>ใช้บ่อยที่ไหน</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>PIPELINE</td>
+<td>+</td>
+<td>–</td>
+<td>inner loop</td>
+</tr>
+<tr>
+<td>UNROLL</td>
+<td>++</td>
+<td>–</td>
+<td>loop เล็ก</td>
+</tr>
+<tr>
+<td>ARRAY_PARTITION</td>
+<td>++</td>
+<td>–</td>
+<td>memory bottleneck</td>
+</tr>
+<tr>
+<td>DATAFLOW</td>
+<td>+</td>
+<td>–</td>
+<td>pipeline function</td>
+</tr>
+<tr>
+<td>INLINE</td>
+<td>-</td>
+<td>+</td>
+<td>small helper</td>
+</tr>
+<tr>
+<td>LOOP_FLATTEN</td>
+<td>+/-</td>
+<td>-</td>
+<td>nested loop</td>
+</tr>
+<tr>
+<td>DEPENDENCE</td>
+<td>0</td>
+<td>–</td>
+<td>false dep</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="บทท-6-interface-synthesis">บทที่ 6 — Interface Synthesis</h2>
+<h3 id="block-level-interface-default">6.1 Block-Level Interface
+(Default)</h3>
+<p>HLS สร้าง port protocol เริ่มต้น:</p>
+<table>
+<thead>
+<tr>
+<th>Port</th>
+<th>ความหมาย</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ap_start</code></td>
+<td>เริ่มทำงาน (input, pulse)</td>
+</tr>
+<tr>
+<td><code>ap_done</code></td>
+<td>ทำงานเสร็จ (output, pulse)</td>
+</tr>
+<tr>
+<td><code>ap_idle</code></td>
+<td>ยังไม่เริ่ม/ทำเสร็จแล้ว (output, level)</td>
+</tr>
+<tr>
+<td><code>ap_ready</code></td>
+<td>พร้อมรับ input ใหม่ (output, level)</td>
+</tr>
+</tbody>
+</table>
+<h3 id="function-argument-port">6.2 Function Argument → Port</h3>
+<div class="sourceCode" id="cb21"><pre
+class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> dut<span class="op">(</span><span class="dt">int</span> a<span class="op">,</span> <span class="dt">int</span> b<span class="op">,</span> <span class="dt">int</span><span class="op">&amp;</span> c<span class="op">);</span></span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a><span class="co">// → ports: a (input), b (input), c (output)</span></span></code></pre></div>
+<p>โดย default ใช้ <strong>handshake protocol</strong>: -
+<code>a_in</code> (data), <code>a_vld</code> (valid), <code>a_rd</code>
+(ready) — หรือ variant อื่น</p>
+<h3 id="axi-interface">6.3 AXI Interface</h3>
+<p>Vitis HLS / Bambu สามารถสร้าง AXI4, AXI4-Lite, AXI4-Stream:</p>
+<div class="sourceCode" id="cb22"><pre
+class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="pp">#pragma HLS INTERFACE m_axi port=a bundle=A depth=1024</span></span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a><span class="pp">#pragma HLS INTERFACE s_axilite port=return bundle=CTRL</span></span></code></pre></div>
+<p><strong>AXI4-Stream (สำหรับ streaming data):</strong></p>
+<div class="sourceCode" id="cb23"><pre
+class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="pp">#pragma HLS INTERFACE axis port=in_stream</span></span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a><span class="pp">#pragma HLS INTERFACE axis port=out_stream</span></span></code></pre></div>
+<h3 id="fifo-stream-interface">6.4 FIFO / Stream Interface</h3>
+<div class="sourceCode" id="cb24"><pre
+class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="pp">#include </span><span class="im">&quot;hls_stream.h&quot;</span></span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> dut<span class="op">(</span>hls<span class="op">::</span>stream<span class="op">&lt;</span><span class="dt">int</span><span class="op">&gt;&amp;</span> in<span class="op">,</span> hls<span class="op">::</span>stream<span class="op">&lt;</span><span class="dt">int</span><span class="op">&gt;&amp;</span> out<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a><span class="pp">#pragma HLS INTERFACE axis port=in</span></span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a><span class="pp">#pragma HLS INTERFACE axis port=out</span></span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a>    out<span class="op">.</span>write<span class="op">(</span>in<span class="op">.</span>read<span class="op">()</span> <span class="op">+</span> <span class="dv">1</span><span class="op">);</span></span>
+<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<h3 id="ram-interface">6.5 RAM Interface</h3>
+<div class="sourceCode" id="cb25"><pre
+class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="pp">#pragma HLS INTERFACE bram port=ram</span></span></code></pre></div>
+<p>HLS จะ infer BRAM (block RAM) โดยอัตโนมัติ — ใช้สำหรับ array ที่ใหญ่</p>
+<h3 id="memory-mapped-vs-streaming">6.6 Memory Mapped vs Streaming</h3>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>Memory-Mapped (AXI)</th>
+<th>Streaming (FIFO)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Address</strong></td>
+<td>มี</td>
+<td>ไม่มี</td>
+</tr>
+<tr>
+<td><strong>Latency</strong></td>
+<td>สูง (bus)</td>
+<td>ต่ำ</td>
+</tr>
+<tr>
+<td><strong>Throughput</strong></td>
+<td>จำกัดด้วย bus</td>
+<td>ต่อ clock</td>
+</tr>
+<tr>
+<td><strong>ใช้เมื่อ</strong></td>
+<td>CPU เข้าถึง</td>
+<td>data pipeline</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p><strong>ดู Part II</strong> สำหรับการปฏิบัติกับ Bambu HLS, การ verify, และ
+integration กับ OpenROAD</p>
+</blockquote>
+</body>
+</html>

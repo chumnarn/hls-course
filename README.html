@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc 3.10.1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>HLS Course</title>
+  <style>
+    /* Default styles provided by pandoc.
+    ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+    */
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: 1.5em;}
+    div.column{flex: auto;}
+    @media screen {
+    div.columns{gap: min(4vw, 1.5em);}
+    div.column{overflow-x: auto;}
+    }
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+    .display.math{display: block; text-align: center; margin: 0.5rem auto;}
+    /* CSS for syntax highlighting */
+    html { -webkit-text-size-adjust: 100%; }
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      {   }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+    code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+    code span.at { color: #7d9029; } /* Attribute */
+    code span.bn { color: #40a070; } /* BaseN */
+    code span.bu { color: #008000; } /* BuiltIn */
+    code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #4070a0; } /* Char */
+    code span.cn { color: #880000; } /* Constant */
+    code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+    code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+    code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+    code span.dt { color: #902000; } /* DataType */
+    code span.dv { color: #40a070; } /* DecVal */
+    code span.er { color: #ff0000; font-weight: bold; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #40a070; } /* Float */
+    code span.fu { color: #06287e; } /* Function */
+    code span.im { color: #008000; font-weight: bold; } /* Import */
+    code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+    code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+    code span.op { color: #666666; } /* Operator */
+    code span.ot { color: #007020; } /* Other */
+    code span.pp { color: #bc7a00; } /* Preprocessor */
+    code span.sc { color: #4070a0; } /* SpecialChar */
+    code span.ss { color: #bb6688; } /* SpecialString */
+    code span.st { color: #4070a0; } /* String */
+    code span.va { color: #19177c; } /* Variable */
+    code span.vs { color: #4070a0; } /* VerbatimString */
+    code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+  </style>
+  <link rel="stylesheet" href="print.css" />
+</head>
+<body>
+<header id="title-block-header">
+<h1 class="title">HLS Course</h1>
+</header>
+<nav id="TOC" role="doc-toc">
+<ul>
+<li><a href="#introduction-to-high-level-synthesis-training-course"
+id="toc-introduction-to-high-level-synthesis-training-course">Introduction
+to High-Level Synthesis — Training Course</a>
+<ul>
+<li><a href="#โครงสรางหลกสตร"
+id="toc-โครงสรางหลกสตร">โครงสร้างหลักสูตร</a></li>
+<li><a href="#labs" id="toc-labs">Labs</a></li>
+<li><a href="#quick-start" id="toc-quick-start">Quick Start</a></li>
+<li><a href="#learning-path" id="toc-learning-path">Learning
+Path</a></li>
+<li><a href="#เนอหาในแตละไฟล" id="toc-เนอหาในแตละไฟล">เนื้อหาในแต่ละไฟล์</a>
+<ul>
+<li><a href="#hls-course-part1-theory.md"
+id="toc-hls-course-part1-theory.md">hls-course-part1-theory.md</a></li>
+<li><a href="#hls-course-part2-practice.md"
+id="toc-hls-course-part2-practice.md">hls-course-part2-practice.md</a></li>
+</ul></li>
+<li><a href="#prerequisites-สำหรบนกศกษา"
+id="toc-prerequisites-สำหรบนกศกษา">Prerequisites สำหรับนักศึกษา</a></li>
+<li><a href="#เอกสารอางอง" id="toc-เอกสารอางอง">เอกสารอ้างอิง</a></li>
+<li><a href="#license" id="toc-license">License</a></li>
+</ul></li>
+</ul>
+</nav>
+<h1
+id="introduction-to-high-level-synthesis-training-course">Introduction
+to High-Level Synthesis — Training Course</h1>
+<blockquote>
+<p><strong>ระดับ:</strong> Beginner → Intermediate
+<strong>ระยะเวลา:</strong> 3 วัน (ทฤษฎี 1 วัน + ปฏิบัติ 2 วัน)
+<strong>เครื่องมือ:</strong> Bambu HLS + Yosys + OpenROAD + Icarus + COCOTB
+<strong>PDK:</strong> IHP SG13G2 (130 nm SiGe BiCMOS) และ SKY130</p>
+</blockquote>
+<hr />
+<h2 id="โครงสรางหลกสตร">โครงสร้างหลักสูตร</h2>
+<table>
+<colgroup>
+<col style="width: 30%" />
+<col style="width: 30%" />
+<col style="width: 40%" />
+</colgroup>
+<thead>
+<tr>
+<th>ส่วน</th>
+<th>ไฟล์</th>
+<th>เนื้อหา</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Part I — ทฤษฎี</strong></td>
+<td><code>hls-course-part1-theory.md</code></td>
+<td>บทที่ 1–6: แนวคิด HLS, Flow, Scheduling/Binding, Coding Style,
+Directives, Interfaces</td>
+</tr>
+<tr>
+<td><strong>Part II — ปฏิบัติ</strong></td>
+<td><code>hls-course-part2-practice.md</code></td>
+<td>บทที่ 7–14: ติดตั้ง Bambu, Labs 1–4, Verification, OpenROAD integration,
+Best Practices</td>
+</tr>
+<tr>
+<td><strong>Labs</strong></td>
+<td><code>labs/</code></td>
+<td>โค้ดตัวอย่างพร้อมรัน</td>
+</tr>
+</tbody>
+</table>
+<h2 id="labs">Labs</h2>
+<table>
+<colgroup>
+<col style="width: 12%" />
+<col style="width: 25%" />
+<col style="width: 20%" />
+<col style="width: 42%" />
+</colgroup>
+<thead>
+<tr>
+<th>Lab</th>
+<th>โฟลเดอร์</th>
+<th>หัวข้อ</th>
+<th>Directives ที่ใช้</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td><code>labs/lab1-adder/</code></td>
+<td>Simple Adder (Hello World)</td>
+<td>—</td>
+</tr>
+<tr>
+<td>2</td>
+<td><code>labs/lab2-fir/</code></td>
+<td>8-tap FIR Filter</td>
+<td><code>PIPELINE II=1</code> + <code>UNROLL</code></td>
+</tr>
+<tr>
+<td>3</td>
+<td><code>labs/lab3-matmul/</code></td>
+<td>8×8 Matrix Multiplication</td>
+<td><code>ARRAY_PARTITION</code> + <code>UNROLL</code> +
+<code>PIPELINE</code></td>
+</tr>
+<tr>
+<td>4</td>
+<td><code>labs/lab4-dataflow/</code></td>
+<td>Streaming Pipeline</td>
+<td><code>DATAFLOW</code> + <code>hls::stream</code></td>
+</tr>
+</tbody>
+</table>
+<h2 id="quick-start">Quick Start</h2>
+<div class="sourceCode" id="cb1"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 1. ติดตั้ง Bambu (ดูรายละเอียดใน Part II)</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> apt-get install <span class="at">-y</span> build-essential autoconf libtool libboost-all-dev libtcl-dev tk-dev</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> clone https://github.com/ferrandi/PandA-bambu.git</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> PandA-bambu <span class="kw">&amp;&amp;</span> <span class="fu">make</span> <span class="at">-j</span><span class="va">$(</span><span class="fu">nproc</span><span class="va">)</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="co"># 2. รัน Lab 1</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> hls-course/labs/lab1-adder</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="fu">chmod</span> +x run.sh</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="ex">./run.sh</span></span></code></pre></div>
+<h2 id="learning-path">Learning Path</h2>
+<pre><code>Day 1: ทฤษฎี
+  ├── Morning: บทที่ 1–3 (แนวคิด, Flow, Internal ops)
+  ├── Afternoon: บทที่ 4–6 (Coding Style, Directives, Interfaces)
+  └── Setup: ติดตั้ง Bambu + Yosys + OpenROAD
+
+Day 2: ปฏิบัติ
+  ├── Morning: Lab 1 (Adder), Lab 2 (FIR)
+  ├── Afternoon: Lab 3 (MatMul)
+  └── Homework: เปลี่ยน optimization, observe resource
+
+Day 3: ปฏิบัติ (ขั้นสูง)
+  ├── Morning: Lab 4 (Dataflow), Verification (COCOTB)
+  ├── Afternoon: OpenROAD integration
+  └── Final Project: Sobel Edge Detector</code></pre>
+<h2 id="เนอหาในแตละไฟล">เนื้อหาในแต่ละไฟล์</h2>
+<h3 id="hls-course-part1-theory.md">hls-course-part1-theory.md</h3>
+<ul>
+<li>บทที่ 1: HLS คืออะไร, ประวัติ, เครื่องมือ</li>
+<li>บทที่ 2: Compilation Flow (Frontend → Transform → Schedule → Bind →
+RTL)</li>
+<li>บทที่ 3: CDFG, Scheduling algorithms, Resource allocation</li>
+<li>บทที่ 4: Arbitrary precision types, Coding style</li>
+<li>บทที่ 5: PIPELINE, UNROLL, ARRAY_PARTITION, DATAFLOW</li>
+<li>บทที่ 6: Block-level interface, AXI, Stream, BRAM</li>
+</ul>
+<h3 id="hls-course-part2-practice.md">hls-course-part2-practice.md</h3>
+<ul>
+<li>บทที่ 7: ติดตั้ง Bambu, โครงสร้าง output</li>
+<li>บทที่ 8: Lab 1 - Simple Adder</li>
+<li>บทที่ 9: Lab 2 - FIR Filter</li>
+<li>บทที่ 10: Lab 3 - Matrix Multiplication</li>
+<li>บทที่ 11: Lab 4 - Dataflow Streaming</li>
+<li>บทที่ 12: Verification ด้วย Icarus + COCOTB</li>
+<li>บทที่ 13: OpenROAD integration</li>
+<li>บทที่ 14: Best practices + Cheat-sheet</li>
+</ul>
+<h2 id="prerequisites-สำหรบนกศกษา">Prerequisites สำหรับนักศึกษา</h2>
+<ul>
+<li>พื้นฐาน Verilog/SystemVerilog</li>
+<li>เคยใช้ Icarus Verilog หรือ Vivado</li>
+<li>พื้นฐาน C/C++ (pointers, arrays, structs)</li>
+<li>Linux command line</li>
+</ul>
+<h2 id="เอกสารอางอง">เอกสารอ้างอิง</h2>
+<ol type="1">
+<li>Bambu HLS: https://panda.dei.polimi.it/?page_id=31</li>
+<li>Xilinx UG902 (Vitis HLS): https://docs.xilinx.com</li>
+<li>“High-Level Synthesis: From Algorithm to Digital Circuit” — Coussy
+et al.</li>
+<li>OpenROAD: https://openroad.readthedocs.io</li>
+<li>IHP-Open-PDK: https://github.com/IHP-GmbH/IHP-Open-PDK</li>
+</ol>
+<h2 id="license">License</h2>
+<p>เอกสารนี้ใช้สำหรับการศึกษา — ใช้และแชร์ได้อย่างอิสระ</p>
+</body>
+</html>
